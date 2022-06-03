@@ -95,7 +95,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                with font-awesome or any other icon font library -->
           
           <li class="nav-item">
-            <a href="index.php" class="nav-link">
+            <a href="./index.php" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Products
@@ -108,7 +108,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                with font-awesome or any other icon font library -->
           
           <li class="nav-item">
-            <a href="category.php" class="nav-link">
+            <a href="./category.php" class="nav-link">
               <i class="nav-icon fa fa-list"></i>
               <p>
                 Categories
@@ -121,7 +121,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                with font-awesome or any other icon font library -->
           
           <li class="nav-item">
-            <a href="user.php" class="nav-link">
+            <a href="./user.php" class="nav-link">
               <i class="nav-icon fas fa-users"></i>
               <p>
                 Users
