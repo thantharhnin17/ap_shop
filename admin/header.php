@@ -37,30 +37,33 @@ scratch. This page gets rid of all links and provides the needed markup only.
       $link_array = explode('/',$link);
       $page = end($link_array);
     ?>
-    <!-- SEARCH FORM -->
-    <form class="form-inline ml-3" method="post"
-    <?php if($page == 'index.php'): ?>
-      action = 'index.php'
-    <?php elseif($page == 'category.php'): ?>
-      action = 'category.php'
-    <?php elseif($page == 'user.php'): ?>
-      action = 'user.php'
-    <?php endif ?>
-    >
-      <!-- csrf -->
-      <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">  
+    
+    <?php if($page != "order_list.php"): ?>
+      <!-- SEARCH FORM -->
+      <form class="form-inline ml-3" method="post"
+      <?php if($page == 'index.php'): ?>
+        action = 'index.php'
+      <?php elseif($page == 'category.php'): ?>
+        action = 'category.php'
+      <?php elseif($page == 'user.php'): ?>
+        action = 'user.php'
+      <?php endif ?>
+      >
+        <!-- csrf -->
+        <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">  
 
-      <div class="input-group input-group-sm">
-        <input name="search" class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search"
-        value="<?php if(empty($_POST['search']) && empty($_COOKIE['search'])) {echo '';} else{ echo isset($_POST['search']) ? $_POST['search'] : $_COOKIE['search'];}  ?>">
-        <!-- echo isset($_POST['search']) ? $_POST['search'] : '';  -->
-        <div class="input-group-append">
-          <button class="btn btn-navbar" type="submit">
-            <i class="fas fa-search"></i>
-          </button>
+        <div class="input-group input-group-sm">
+          <input name="search" class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search"
+          value="<?php if(empty($_POST['search']) && empty($_COOKIE['search'])) {echo '';} else{ echo isset($_POST['search']) ? $_POST['search'] : $_COOKIE['search'];}  ?>">
+          <!-- echo isset($_POST['search']) ? $_POST['search'] : '';  -->
+          <div class="input-group-append">
+            <button class="btn btn-navbar" type="submit">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    <?php endif ?>
 
     
   </nav>
@@ -102,11 +105,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </a>
           </li>
-        </ul>
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-          
+
           <li class="nav-item">
             <a href="./category.php" class="nav-link">
               <i class="nav-icon fa fa-list"></i>
@@ -115,11 +114,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </a>
           </li>
-        </ul>
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-          
+
           <li class="nav-item">
             <a href="./user.php" class="nav-link">
               <i class="nav-icon fas fa-users"></i>
@@ -128,7 +123,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </a>
           </li>
+
+          <li class="nav-item">
+            <a href="./order_list.php" class="nav-link">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Orders
+              </p>
+            </a>
+          </li>
+
         </ul>
+        
       </nav>
       <!-- /.sidebar-menu -->
     </div>

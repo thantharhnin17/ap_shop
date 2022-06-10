@@ -42,7 +42,7 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Product Listings</h3>
+                <h3 class="card-title">Sale Order Listings</h3>
               </div>
 
               <?php
@@ -55,48 +55,33 @@
                 $numOfRecs = 5;
                 $offset = ($pageno - 1) * $numOfRecs;
 
-                if(empty($_POST['search']) && empty($_COOKIE['search'])){
-                  $stmt = $pdo->prepare("SELECT * FROM products ORDER BY id DESC");
+                
+                  $stmt = $pdo->prepare("SELECT * FROM sale_orders ORDER BY id DESC");
                   $stmt->execute();
                   $raw_result = $stmt->fetchAll();
                   $total_pages = ceil(count($raw_result) / $numOfRecs);
 
-                  $stmt = $pdo->prepare("SELECT * FROM products ORDER BY id DESC LIMIT $offset,$numOfRecs");
+                  $stmt = $pdo->prepare("SELECT * FROM sale_orders ORDER BY id DESC LIMIT $offset,$numOfRecs");
                   $stmt->execute();
                   $result = $stmt->fetchAll();
-                }else{
-                  $search_key = isset($_POST['search']) ? $_POST['search'] : $_COOKIE['search'];
-                  $stmt = $pdo->prepare("SELECT * FROM products WHERE name LIKE '%$search_key%' ORDER BY id DESC");
-                  $stmt->execute();
-                  $raw_result = $stmt->fetchAll();
-                  $total_pages = ceil(count($raw_result) / $numOfRecs);
-
-                  $stmt = $pdo->prepare("SELECT * FROM products WHERE name LIKE '%$search_key%' ORDER BY id DESC LIMIT $offset,$numOfRecs");
-                  $stmt->execute();
-                  $result = $stmt->fetchAll();
-                }
               ?>
 
               <!-- /.card-header -->
               <div class="card-body">
-                <div>
-                  <a href="product_add.php" class="btn btn-success">Create New Product</a>
-                </div>
-                <br>
+                
                 <table class="table table-bordered">
                   <thead>                  
                     <tr>
                       <th style="width: 10px">#</th>
-                      <th>Name</th>
-                      <th>Description</th>
-                      <th>Category</th>
-                      <th>In stock</th>
-                      <th>Price</th>
-                      <th style="width: 150px">Actions</th>
+                      <th>Users</th>
+                      <th>Total Price</th>
+                      <th>Order Date</th>
+                      <th style="width: 120px">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <?php
+                    
+                  <?php
                       if($result){
                         if(!empty($_GET['pageno'])){
                           $i = $offset+1;
@@ -108,25 +93,19 @@
                     ?>
 
                     <?php
-                      $cat_stmt = $pdo->prepare("SELECT * FROM categories WHERE id=".$value['category_id']);
-                      $cat_stmt->execute();
-                      $cat_result = $cat_stmt->fetchAll();
+                      $user_stmt = $pdo->prepare("SELECT * FROM users WHERE id=".$value['user_id']);
+                      $user_stmt->execute();
+                      $user_result = $user_stmt->fetchAll();
                     ?>
 
                     <tr>
                       <td><?php echo $i; ?></td>
-                      <td><?php echo escape($value['name']); ?></td>
-                      <td><?php echo escape(substr($value['description'],0,30)); ?></td>
-                      <td><?php echo escape($cat_result[0]['name']); ?></td>
-                      <td><?php echo escape($value['quantity']); ?></td>
-                      <td><?php echo escape($value['price']); ?></td>
-                      <td>
-                        <a href="product_edit.php?id=<?php echo $value['id']; ?>" class="btn btn-sm btn-warning">Edit</a>
-                        <a href="product_delete.php?id=<?php echo $value['id']; ?>" 
-                          class="btn btn-sm btn-danger"
-                          onclick="return confirm('Are you sure you want to delete this post?');">
-                          Delete
-                        </a>
+                      <td><?php echo escape($user_result[0]['name']); ?></td>
+                      <td><?php echo escape($value['total_price']); ?></td>
+                      <td><?php echo escape(date('Y-m-d', strtotime($value['order_date']))); ?></td>
+                      <td class="d-flex justify-content-center align-items-center">
+                        <a href="order_detail.php?id=<?php echo $value['id']; ?>" class="btn btn-sm btn-secondary">View</a>
+                        
                       </td>
                     </tr>
                        
@@ -139,6 +118,7 @@
                   </tbody>
                 </table>
                       <br>
+
                 <nav aria-label="Page navigation example" class="float-right">
                   <ul class="pagination">
                     <li class="page-item">
