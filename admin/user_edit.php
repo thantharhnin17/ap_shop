@@ -5,20 +5,26 @@
   require "../config/common.php";
 
   if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
-    header('Location: login.php');
+    header('Location: ./login.php');
   }
   if($_SESSION['role'] != 1){
-    header('Location: login.php');
+    header('Location: ./login.php');
   }
 
   if($_POST){
     
-    if(empty($_POST['name']) || empty($_POST['email'])){
+    if(empty($_POST['name']) || empty($_POST['email']) || empty($_POST['phone']) || empty($_POST['address'])){
       if(empty($_POST['name'])){
-        $nameError = 'Please fill name';
+        $nameError = 'Name is required';
       }
       if(empty($_POST['email'])){
-        $emailError = 'Please fill email';
+        $emailError = 'Email is required';
+      }
+      if(empty($_POST['phone'])){
+        $phoneError = "Phone No is required";
+      }
+      if(empty($_POST['address'])){
+          $addressError = "Address is required";
       }
     }
     elseif(!empty($_POST['password']) && strlen($_POST['password']) < 4){
@@ -28,7 +34,10 @@
       $id = $_POST['id'];
       $name = $_POST['name'];
       $email = $_POST['email'];
+      $phone = $_POST['phone'];
+      $address = $_POST['address'];
       $password = password_hash($_POST['password'],PASSWORD_DEFAULT);
+      //$password = $_POST['password'];
       $role = $_POST['role'];
 
       $stmt = $pdo->prepare("SELECT * FROM users WHERE email=:email AND id!=:id");
@@ -40,10 +49,11 @@
           echo "<script>alert('Email duplicate')</script>";
       }else{ 
         if($password != null){
-          $stmt = $pdo->prepare("UPDATE users SET name='$name',email='$email',password='$password',role='$role' WHERE id='$id'");
+          $stmt = $pdo->prepare("UPDATE users SET name='$name',email='$email',password='$password',address='$address',phone='$phone',role='$role' WHERE id='$id'");
         }else{
-          $stmt = $pdo->prepare("UPDATE users SET name='$name',email='$email',role='$role' WHERE id='$id'");
+          $stmt = $pdo->prepare("UPDATE users SET name='$name',email='$email',address='$address',phone='$phone',role='$role' WHERE id='$id'");
         }
+            
               
               $result = $stmt->execute();
               if($result){
@@ -103,6 +113,17 @@
                         <input type="text" class="form-control" name="email" value="<?php echo escape($result[0]['email']) ?>">
                         <div class="form-text text-danger"><?php echo empty($emailError) ? '': '*'.$emailError; ?></div>
                     </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone No</label>
+                        <input type="text" class="form-control" name="phone" value="<?php echo escape($result[0]['phone']); ?>">
+                        <div class="form-text text-danger"><?php echo empty($phoneError) ? '': '*'.$phoneError; ?></div>
+							      </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <textarea name="address" class="form-control" cols="30" rows="3"><?php echo escape($result[0]['address']); ?></textarea>
+                        <div class="form-text text-danger"><?php echo empty($addressError) ? '': $addressError ?></div>
+							      </div>
+
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
                         <span style="font-size: 10px;">This user already has a password</span>

@@ -5,23 +5,30 @@
   require "../config/common.php";
 
   if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
-    header('Location: login.php');
+    header('Location: ./login.php');
   }
   if($_SESSION['role'] != 1){
-    header('Location: login.php');
+    header('Location: ./login.php');
   }
 
   if($_POST){
 
-    if(empty($_POST['name']) || empty($_POST['email']) || empty($_POST['password']) || strlen($_POST['password']) < 4){
+    if(empty($_POST['name']) || empty($_POST['email']) || empty($_POST['phone']) || empty($_POST['address'])
+     || empty($_POST['password']) || strlen($_POST['password']) < 4){
       if(empty($_POST['name'])){
-        $nameError = 'Please fill name';
+        $nameError = 'Name is required';
       }
       if(empty($_POST['email'])){
-        $emailError = 'Please fill email';
+        $emailError = 'Email is required';
+      }
+      if(empty($_POST['phone'])){
+        $phoneError = "Phone No is required";
+      }
+      if(empty($_POST['address'])){
+          $addressError = "Address is required";
       }
       if(empty($_POST['password'])){
-        $passwordError = 'Please fill password';
+        $passwordError = 'Password is required';
       }
       elseif(strlen($_POST['password']) < 4){
         $passwordError = 'Password should be 4 characters at least';
@@ -29,6 +36,8 @@
     }else{
       $name = $_POST['name'];
       $email = $_POST['email'];
+      $phone = $_POST['phone'];
+      $address = $_POST['address'];
       $password = password_hash($_POST['password'],PASSWORD_DEFAULT);
       $role = $_POST['role'];
 
@@ -41,8 +50,8 @@
       if($user){
           echo "<script>alert('Email duplicate')</script>";
       }else{  
-        $stmt = $pdo->prepare("INSERT INTO users(name,email,password,role) VALUES (?,?,?,?)");
-        $result = $stmt->execute([$name,$email,$password,$role]);
+        $stmt = $pdo->prepare("INSERT INTO users(name,email,phone,address,password,role) VALUES (?,?,?,?,?,?)");
+        $result = $stmt->execute([$name,$email,$phone,$address,$password,$role]);
         if($result){
           echo "<script>alert('Successfully Registered!'); window.location.href='user.php';</script>";
         }
@@ -93,6 +102,16 @@
                         <input type="text" class="form-control" name="email" value="<?php echo escape($_POST['email'] ?? ''); ?>">
                         <div class="form-text text-danger"><?php echo empty($emailError) ? '': '*'.$emailError; ?></div>
                     </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone No</label>
+                        <input type="text" class="form-control" name="phone" value="<?php echo escape($_POST['phone'] ?? ''); ?>">
+                        <div class="form-text text-danger"><?php echo empty($phoneError) ? '': '*'.$phoneError; ?></div>
+							      </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <textarea name="address" class="form-control" cols="30" rows="3"><?php echo escape($_POST['address'] ?? ''); ?></textarea>
+                        <div class="form-text text-danger"><?php echo empty($addressError) ? '': $addressError ?></div>
+							      </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" name="password" id="pass" value="<?php echo escape($_POST['password'] ?? ''); ?>">

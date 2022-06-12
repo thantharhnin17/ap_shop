@@ -6,20 +6,20 @@
   require "../config/common.php";
 
   if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
-    header('Location: login.php');
+    header('Location: ./login.php');
   }
   if($_SESSION['role'] != 1){
-    header('Location: login.php');
+    header('Location: ./login.php');
   }
 
   if($_POST){
     
     if(empty($_POST['name']) || empty($_POST['description'])){
         if(empty($_POST['name'])){
-           $nameError = "Please fill category's name"; 
+           $nameError = "Category's name is required"; 
         }
         if(empty($_POST['description'])){
-            $descError = "Please fill category's description"; 
+            $descError = "Category's description is required"; 
          }
     }else{
         $id = $_POST['id'];

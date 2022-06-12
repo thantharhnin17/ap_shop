@@ -5,10 +5,10 @@
   require "../config/common.php";
 
   if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
-    header('Location: login.php');
+    header('Location: ./login.php');
   }
   if($_SESSION['role'] != 1){
-    header('Location: login.php');
+    header('Location: ./login.php');
   }
   if(isset($_POST['search'])){
     setcookie('search', $_POST['search'], time() + (86400 * 30), "/"); // 86400 = 1 day
