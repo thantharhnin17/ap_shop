@@ -36,7 +36,6 @@
       $email = $_POST['email'];
       $phone = $_POST['phone'];
       $address = $_POST['address'];
-      $password = password_hash($_POST['password'],PASSWORD_DEFAULT);
       //$password = $_POST['password'];
       $role = $_POST['role'];
 
@@ -48,7 +47,8 @@
       if($user){
           echo "<script>alert('Email duplicate')</script>";
       }else{ 
-        if($password != null){
+        if($_POST['password'] != null){
+          $password = password_hash($_POST['password'],PASSWORD_DEFAULT);
           $stmt = $pdo->prepare("UPDATE users SET name='$name',email='$email',password='$password',address='$address',phone='$phone',role='$role' WHERE id='$id'");
         }else{
           $stmt = $pdo->prepare("UPDATE users SET name='$name',email='$email',address='$address',phone='$phone',role='$role' WHERE id='$id'");
