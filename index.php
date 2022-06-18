@@ -19,14 +19,27 @@
                 $offset = ($pageno - 1) * $numOfRecs;
 
                 if(empty($_POST['search']) && empty($_COOKIE['search'])){
-                  $stmt = $pdo->prepare("SELECT * FROM products ORDER BY id DESC");
-                  $stmt->execute();
-                  $raw_result = $stmt->fetchAll();
-                  $total_pages = ceil(count($raw_result) / $numOfRecs);
+					if(!empty($_GET['category_id'])){
+						$category_id = $_GET['category_id'];
+						$stmt = $pdo->prepare("SELECT * FROM products WHERE category_id='$category_id' ORDER BY id DESC");
+						$stmt->execute();
+						$raw_result = $stmt->fetchAll();
+						$total_pages = ceil(count($raw_result) / $numOfRecs);
 
-                  $stmt = $pdo->prepare("SELECT * FROM products ORDER BY id DESC LIMIT $offset,$numOfRecs");
-                  $stmt->execute();
-                  $result = $stmt->fetchAll();
+						$stmt = $pdo->prepare("SELECT * FROM products WHERE category_id='$category_id' ORDER BY id DESC LIMIT $offset,$numOfRecs");
+						$stmt->execute();
+						$result = $stmt->fetchAll();
+					}else{
+						$stmt = $pdo->prepare("SELECT * FROM products ORDER BY id DESC");
+						$stmt->execute();
+						$raw_result = $stmt->fetchAll();
+						$total_pages = ceil(count($raw_result) / $numOfRecs);
+
+						$stmt = $pdo->prepare("SELECT * FROM products ORDER BY id DESC LIMIT $offset,$numOfRecs");
+						$stmt->execute();
+						$result = $stmt->fetchAll();
+					}
+                  
                 }else{
                   $search_key = isset($_POST['search']) ? $_POST['search'] : $_COOKIE['search'];
                   $stmt = $pdo->prepare("SELECT * FROM products WHERE name LIKE '%$search_key%' ORDER BY id DESC");
@@ -58,7 +71,7 @@
 						<?php foreach($cat_result as $key => $value){ ?>
 
 						<li class="main-nav-list">
-							<a href=""#><?php echo escape($value['name']); ?></a>
+							<a href="index.php?category_id=<?php echo $value['id']; ?>"><?php echo escape($value['name']); ?></a>
 						</li>
 
 						<?php } ?>
@@ -103,7 +116,9 @@
 						<!-- single product -->
 						<div class="col-lg-4 col-md-6">
 							<div class="single-product">
-								<img class="img-fluid" src="admin/images/<?php echo escape($value['image']); ?>" style="height: 250px; object-fit: cover; !important">
+								<a href="product_detail.php?id=<?php echo $value['id']; ?>">
+									<img class="img-fluid" src="admin/images/<?php echo escape($value['image']); ?>" style="height: 250px; object-fit: cover; !important">
+								</a>
 								<div class="product-details">
 									<h6><?php echo escape($value['name']); ?></h6>
 									<div class="price">
@@ -115,7 +130,7 @@
 											<span class="ti-bag"></span>
 											<p class="hover-text">add to bag</p>
 										</a>
-										<a href="" class="social-info">
+										<a href="product_detail.php?id=<?php echo $value['id']; ?>" class="social-info">
 											<span class="lnr lnr-move"></span>
 											<p class="hover-text">view more</p>
 										</a>
