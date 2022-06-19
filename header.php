@@ -5,6 +5,10 @@
 	
 	require 'config/config.php';
 	require "config/common.php";
+
+	if(empty($_SESSION['userId']) && empty($_SESSION['loggedIn'])){
+        header('Location: login.php');
+      }
 ?>
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
@@ -70,7 +74,7 @@
 								<a href="cart.php" class="cart position-relative">
 									<span class="ti-bag"></span>
 									<?php if($cart != 0){ ?>
-										<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning" style="line-height: 20px;!important">
+										<span class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-warning" style="width:25px; height:25px; line-height: 20px;!important">
 											<?php echo $cart; ?>
 										</span>
 									<?php } ?>
@@ -78,6 +82,9 @@
 							</li>
 							<li class="nav-item">
 								<button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
+							</li>
+							<li class="nav-item">
+								<a href="logout.php" class=""><span class="fa fa-sign-out"></span></a>
 							</li>
 						</ul>
 					</div>

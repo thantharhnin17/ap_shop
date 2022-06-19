@@ -4,8 +4,13 @@
 	require 'config/config.php';
 	require "config/common.php";
 
+	if(empty($_SESSION['userId']) && empty($_SESSION['loggedIn'])){
+        header('Location: login.php');
+      }
+
+
 	if(!empty($_SESSION['cart'])){
-		$userId = $_SESSION['user_id'];
+		$userId = $_SESSION['userId'];
 		$total = 0;
 
 		foreach($_SESSION['cart'] as $key => $qty){

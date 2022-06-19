@@ -15,9 +15,9 @@ if($_POST){
 	$user = $stmt->fetch(PDO::FETCH_ASSOC);
 	if($user){
 		if(password_verify($password,$user['password'])){
-			$_SESSION['user_id'] = $user['id'];
-			$_SESSION['name'] = $user['name'];
-			$_SESSION['logged_in'] = time();
+			$_SESSION['userId'] = $user['id'];
+			$_SESSION['userName'] = $user['name'];
+			$_SESSION['loggedIn'] = time();
 
 			header("Location: index.php");
 		}
@@ -95,11 +95,7 @@ if($_POST){
 		<div class="container">
 			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
 				<div class="col-first">
-					<h1>Login/Register</h1>
-					<nav class="d-flex align-items-center">
-						<a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
-						<a href="category.html">Login/Register</a>
-					</nav>
+					<h1>Login Page</h1>
 				</div>
 			</div>
 		</div>
@@ -107,7 +103,7 @@ if($_POST){
 	<!-- End Banner Area -->
 
 	<!--================Login Box Area =================-->
-	<section class="login_box_area section_gap">
+	<section class="login_box_area section_gap" style="padding-top: 50px; !important">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-6">
