@@ -1,2 +1,1 @@
-each category
-product detail
+order submit 1:01

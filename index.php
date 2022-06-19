@@ -21,39 +21,49 @@
                 if(empty($_POST['search']) && empty($_COOKIE['search'])){
 					if(!empty($_GET['category_id'])){
 						$category_id = $_GET['category_id'];
-						$stmt = $pdo->prepare("SELECT * FROM products WHERE category_id='$category_id' ORDER BY id DESC");
+						$stmt = $pdo->prepare("SELECT * FROM products WHERE category_id='$category_id' AND quantity > 0  ORDER BY id DESC");
 						$stmt->execute();
 						$raw_result = $stmt->fetchAll();
 						$total_pages = ceil(count($raw_result) / $numOfRecs);
 
-						$stmt = $pdo->prepare("SELECT * FROM products WHERE category_id='$category_id' ORDER BY id DESC LIMIT $offset,$numOfRecs");
+						$stmt = $pdo->prepare("SELECT * FROM products WHERE category_id='$category_id' AND quantity > 0  ORDER BY id DESC LIMIT $offset,$numOfRecs");
 						$stmt->execute();
 						$result = $stmt->fetchAll();
 					}else{
-						$stmt = $pdo->prepare("SELECT * FROM products ORDER BY id DESC");
+						$stmt = $pdo->prepare("SELECT * FROM products WHERE quantity > 0 ORDER BY id DESC");
 						$stmt->execute();
 						$raw_result = $stmt->fetchAll();
 						$total_pages = ceil(count($raw_result) / $numOfRecs);
 
-						$stmt = $pdo->prepare("SELECT * FROM products ORDER BY id DESC LIMIT $offset,$numOfRecs");
+						$stmt = $pdo->prepare("SELECT * FROM products WHERE quantity > 0 ORDER BY id DESC LIMIT $offset,$numOfRecs");
 						$stmt->execute();
 						$result = $stmt->fetchAll();
 					}
                   
                 }else{
                   $search_key = isset($_POST['search']) ? $_POST['search'] : $_COOKIE['search'];
-                  $stmt = $pdo->prepare("SELECT * FROM products WHERE name LIKE '%$search_key%' ORDER BY id DESC");
+                  $stmt = $pdo->prepare("SELECT * FROM products WHERE name LIKE '%$search_key%' AND quantity > 0 ORDER BY id DESC");
                   $stmt->execute();
                   $raw_result = $stmt->fetchAll();
                   $total_pages = ceil(count($raw_result) / $numOfRecs);
 
-                  $stmt = $pdo->prepare("SELECT * FROM products WHERE name LIKE '%$search_key%' ORDER BY id DESC LIMIT $offset,$numOfRecs");
+                  $stmt = $pdo->prepare("SELECT * FROM products WHERE name LIKE '%$search_key%' AND quantity > 0 ORDER BY id DESC LIMIT $offset,$numOfRecs");
                   $stmt->execute();
                   $result = $stmt->fetchAll();
                 }
             ?>
 
+	<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb" style="margin-bottom: 50px; !important">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>Welcome</h1>
 
+				</div>
+			</div>
+		</div>
+	</section>
 	<!-- End Banner Area -->
 	<div class="container">
 		<div class="row">
@@ -126,14 +136,24 @@
 									</div>
 									<div class="prd-bottom">
 
-										<a href="" class="social-info">
-											<span class="ti-bag"></span>
-											<p class="hover-text">add to bag</p>
-										</a>
-										<a href="product_detail.php?id=<?php echo $value['id']; ?>" class="social-info">
-											<span class="lnr lnr-move"></span>
-											<p class="hover-text">view more</p>
-										</a>
+										<form action="addToCart.php" method="POST">
+											<!-- csrf -->
+											<input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>"> 
+											<input type="hidden" name="id" value="<?php echo escape($value['id']); ?>">
+											<input type="hidden" name="qty" value="1">
+
+
+											<div class="social-info">
+												<button type="submit" class="social-info" style="display: contents;">
+													<span class="ti-bag"></span>
+													<p class="hover-text" style="left:22px;">add to bag</p>
+												</button>
+											</div>
+											<a href="product_detail.php?id=<?php echo $value['id']; ?>" class="social-info">
+												<span class="lnr lnr-move"></span>
+												<p class="hover-text">view more</p>
+											</a>
+										</form>
 									</div>
 								</div>
 							</div>
