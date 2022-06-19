@@ -38,7 +38,16 @@
     }
     
     else{ //validation success
-        if($_FILES['image']['name']){
+        if(is_numeric($_POST['quantity']) != 1){
+          $qtyError = "Quantity must be number"; 
+        }
+        if(is_numeric($_POST['price']) != 1){
+          $priceError = "Price must be number"; 
+        }
+
+        if($qtyError == '' && $priceError == ''){
+          
+          if($_FILES['image']['name']){
             $file = 'images/'.($_FILES['image']['name']);
             $imageType = pathinfo($file,PATHINFO_EXTENSION);
             
@@ -63,22 +72,24 @@
                     echo "<script>alert('Product Is Successfully Updated'); window.location.href='index.php';</script>";
                 }
             }
-        }else{
-            $id = $_POST['id'];
-            $name = $_POST['name'];
-            $description = $_POST['description'];
-            $category = $_POST['category'];
-            $quantity = $_POST['quantity'];
-            $price = $_POST['price'];
-                
-            $stmt = $pdo->prepare("UPDATE products SET name='$name', description='$description', category_id='$category',
-                                                            quantity='$quantity', price='$price' WHERE id='$id'");
-            $result = $stmt->execute();
+            }else{
+                $id = $_POST['id'];
+                $name = $_POST['name'];
+                $description = $_POST['description'];
+                $category = $_POST['category'];
+                $quantity = $_POST['quantity'];
+                $price = $_POST['price'];
+                    
+                $stmt = $pdo->prepare("UPDATE products SET name='$name', description='$description', category_id='$category',
+                                                                quantity='$quantity', price='$price' WHERE id='$id'");
+                $result = $stmt->execute();
 
-            if($result){
-                    echo "<script>alert('Product Is Successfully Updated'); window.location.href='index.php';</script>";
+                if($result){
+                        echo "<script>alert('Product Is Successfully Updated'); window.location.href='index.php';</script>";
+                }
             }
         }
+        
 
     }
       
